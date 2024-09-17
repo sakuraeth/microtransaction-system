@@ -1,0 +1,19 @@
+{
+  "name": "microtransaction-system",
+  "version": "1.0.0",
+  "description": "A microtransaction system using Solidity",
+  "scripts": {
+    "test": "truffle test",
+    "deploy": "node scripts/deploy.js",
+    "start": "lite-server"
+  },
+  "devDependencies": {
+    "truffle": "^5.4.0",
+    "web3": "^1.5.0",
+    "dotenv": "^8.2.0",
+    "lite-server": "^2.6.1"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
