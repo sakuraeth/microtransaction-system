@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL;
 
@@ -6,36 +6,28 @@ function App() {
   const [fetchedData, setFetchedData] = useState([]);
   const [fetchError, setFetchError] = useState(null);
 
-  useEffect(() => {
-    fetchApiData();
-  }, []);
-
-  const fetchApiData = async () => {
-    try {
-      const response = await fetchApi(`${API_BASE_URL}/data`);
-      handleApiResponse(response);
-    } catch (error) {
-      handleApiError(error);
-    }
-  };
-
-  const fetchApi = async (url) => {
+  const fetchApi = useCallback(async (url) => {
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     return await response.json();
-  };
+  }, []);
 
-  const handleApiResponse = (jsonData) => {
-    setFetchedData(jsonData);
-    setFetchError(null);
-  };
+  const fetchApiData = useCallback(async () => {
+    try {
+      const response = await fetchApi(`${API_BASE_URL}/data`);
+      setFetchedData(response);
+      setFetchError(null);
+    } catch (error) {
+      console.error('Error retrieving data:', error);
+      setFetchError('Failed to fetch data. Please try again later.');
+    }
+  }, [fetchApi]);
 
-  const handleApiError = (error) => {
-    console.error('Error retrieving data:', error);
-    setFetchError('Failed to fetch data. Please try again later.');
-  };
+  useEffect(() => {
+    fetchApiData();
+  }, [fetchApiData]);
 
   return (
     <div className="app">
